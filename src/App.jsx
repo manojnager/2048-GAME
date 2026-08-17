@@ -1,6 +1,7 @@
 // src/App.jsx
 import { useGameLogic } from './hooks/useGameLogic';
 import { useKeyboardControls } from './hooks/useKeyboardControls';
+import Board from './components/Board';
 import './App.css';
 
 function App() {
@@ -24,15 +25,7 @@ function App() {
         </div>
       )}
 
-      <div className="grid">
-        {grid.map((row, r) =>
-          row.map((cell, c) => (
-            <div key={`${r}-${c}`} className="cell">
-              {cell ? cell.value : ''}
-            </div>
-          ))
-        )}
-      </div>
+      <Board grid={grid} />
 
       <button onClick={restart}>Restart</button>
     </div>

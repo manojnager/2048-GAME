@@ -1,8 +1,25 @@
 /* src/App.css */
+body {
+  margin: 0;
+}
+
 .app {
   text-align: center;
   padding: 20px;
-  font-family: sans-serif;
+  font-family: 'Segoe UI', sans-serif;
+  background: radial-gradient(circle at top, #1a1a2e, #0a0a12);
+  min-height: 100vh;
+  color: #e0e7ff;
+}
+
+h1 {
+  font-size: 48px;
+  letter-spacing: 4px;
+  background: linear-gradient(90deg, #818cf8, #f472b6, #facc15);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 10px;
 }
 
 .scoreboard {
@@ -13,33 +30,32 @@
   font-weight: bold;
 }
 
+.scoreboard div {
+  background: #1a1a2e;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid #333;
+}
+
 .status-banner {
   margin-bottom: 10px;
-  font-size: 20px;
+  font-size: 22px;
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(5, 60px);
-  grid-template-rows: repeat(5, 60px);
-  gap: 8px;
-  justify-content: center;
-  margin: 20px auto;
-  background: #333;
-  padding: 8px;
+.status-banner button,
+.app > button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background: linear-gradient(90deg, #818cf8, #f472b6);
+  border: none;
   border-radius: 8px;
-  width: fit-content;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 16px;
 }
 
-.cell {
-  width: 60px;
-  height: 60px;
-  background: #555;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  font-weight: bold;
-  border-radius: 4px;
+.status-banner button:hover,
+.app > button:hover {
+  opacity: 0.85;
 }

@@ -1,0 +1,77 @@
+/* src/components/Board.css */
+
+.board {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(5, 70px);
+  grid-template-rows: repeat(5, 70px);
+  gap: 8px;
+  padding: 12px;
+  background: #0f0f1a;
+  border-radius: 12px;
+  box-shadow:
+    inset 0 0 20px rgba(0, 0, 0, 0.6),
+    0 0 30px rgba(99, 102, 241, 0.15);
+  margin: 20px auto;
+  width: fit-content;
+}
+
+.board-cell {
+  width: 70px;
+  height: 70px;
+  background: #1a1a2e;
+  border-radius: 8px;
+  border: 1px solid #2a2a3e;
+}
+
+.tile-layer {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+}
+
+.tile {
+  position: absolute;
+  width: 70px;
+  height: 70px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 800;
+  font-family: 'Segoe UI', sans-serif;
+  transition: top 0.15s ease-in-out, left 0.15s ease-in-out;
+  user-select: none;
+}
+
+.tile-new {
+  animation: popIn 0.2s ease-out;
+}
+
+.tile-merged {
+  animation: mergePop 0.2s ease-out;
+}
+
+@keyframes popIn {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes mergePop {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
