@@ -50,7 +50,7 @@ export default function GameOverlay({ status, score, highScore, highestTile, mov
     }
   }, [status]);
 
-  if (status === 'playing') return null;
+  if (status === 'playing' || status === 'setup') return null;
 
   const isWin = status === 'won';
 
