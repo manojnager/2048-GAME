@@ -10,8 +10,9 @@ export default function Board({ grid }) {
   grid.forEach((row, r) => {
     row.forEach((cell, c) => {
       if (cell) {
+        const key = cell.blocked ? `obstacle-${r}-${c}` : cell.id;
         tiles.push(
-          <Tile key={cell.id} tile={cell} row={r} col={c} />
+          <Tile key={key} tile={cell} row={r} col={c} />
         );
       }
     });

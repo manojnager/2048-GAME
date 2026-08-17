@@ -19,8 +19,18 @@ function getColors(value) {
 }
 
 export default function Tile({ tile, row, col }) {
-  const { bg, text } = getColors(tile.value);
+  if (tile.blocked) {
+    return (
+      <div
+        className="tile tile-obstacle"
+        style={{ gridRow: row + 1, gridColumn: col + 1 }}
+      >
+        🪨
+      </div>
+    );
+  }
 
+  const { bg, text } = getColors(tile.value);
   const classNames = ['tile'];
   if (tile.isNew) classNames.push('tile-new');
   if (tile.isMerged) classNames.push('tile-merged');
