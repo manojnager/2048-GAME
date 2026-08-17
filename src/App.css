@@ -12,7 +12,7 @@
   color: #f5e6d3;
 
   background-color: #3b2418;
-  background-image:
+  /* background-image:
     repeating-linear-gradient(
       90deg,
       rgba(0, 0, 0, 0.12) 0px,
@@ -32,6 +32,36 @@
       #4a2f1f 0%,
       #3b2418 50%,
       #2c1a10 100%
+    ); */
+  background-image:
+    radial-gradient(
+        ellipse at center,
+        rgba(125, 73, 31, 0.16) 0%,
+        rgba(55, 30, 17, 0.08) 45%,
+        rgba(15, 7, 3, 0.32) 100%
+    ),
+    repeating-linear-gradient(
+        90deg,
+        rgba(12, 5, 2, 0.16) 0px,
+        rgba(12, 5, 2, 0.16) 2px,
+        transparent 2px,
+        transparent 24px,
+        rgba(190, 115, 48, 0.035) 25px,
+        transparent 29px,
+        transparent 55px
+    ),
+    repeating-linear-gradient(
+        88deg,
+        rgba(255, 190, 110, 0.025) 0px,
+        rgba(255, 190, 110, 0.025) 1px,
+        transparent 1px,
+        transparent 5px
+    ),
+    linear-gradient(
+        180deg,
+        #4a2e1e 0%,
+        #3b2417 45%,
+        #2d1a10 100%
     );
   background-size: 140px 100%, 100% 6px, 100% 100%;
 

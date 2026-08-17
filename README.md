@@ -64,3 +64,22 @@ Output goes to the `dist/` folder — deployable to any static host (Vercel, Net
 - Your **best score** is saved automatically in your browser.
 
 ## 📁 Project Structure
+
+src/
+├── components/ # UI components (Board, Tile, GameOverlay, SoundControls)
+├── hooks/ # useGameLogic, useKeyboardControls
+├── utils/ # gameLogic.js (pure game engine), sound.js (audio)
+├── App.jsx # Main app layout
+└── App.css # Global theme styles
+
+## 🗺️ Roadmap / Possible Future Additions
+
+- Mobile touch/swipe controls
+- Responsive layout for small screens
+- Undo move
+- Obstacle/blocked tiles for extra difficulty
+- Timer or challenge mode
+
+## 📄 License
+
+This project is for learning purposes. Feel free to fork and modify.
