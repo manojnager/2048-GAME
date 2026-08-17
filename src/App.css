@@ -123,15 +123,6 @@ h1 {
   color: #ffd98a;
 }
 
-.status-banner {
-  margin: 16px 0;
-  font-size: 26px;
-  font-weight: 800;
-  color: #ffd98a;
-  animation: popIn 0.3s ease-out;
-}
-
-.status-banner button,
 .new-game-btn {
   padding: 12px 26px;
   background: linear-gradient(180deg, #f0a84b, #c9761f);
@@ -147,7 +138,6 @@ h1 {
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-.status-banner button:hover,
 .new-game-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 0 24px rgba(240, 168, 75, 0.6);

@@ -3,10 +3,11 @@ import { useGameLogic } from './hooks/useGameLogic';
 import { useKeyboardControls } from './hooks/useKeyboardControls';
 import Board from './components/Board';
 import SoundControls from './components/SoundControls';
+import GameOverlay from './components/GameOverlay';
 import './App.css';
 
 function App() {
-  const { grid, score, highScore, status, moveGrid, restart } = useGameLogic();
+  const { grid, score, highScore, status, moveGrid, restart, moveCount, highestTile } = useGameLogic();
 
   useKeyboardControls(moveGrid);
 
@@ -30,16 +31,16 @@ function App() {
 
       <p className="tagline">Join the numbers and get to the 2048 tile!</p>
 
-      {status !== 'playing' && (
-        <div className="status-banner">
-          {status === 'won' ? '🎉 You Won!' : '💀 Game Over'}
-          <div>
-            <button onClick={restart}>Play Again</button>
-          </div>
-        </div>
-      )}
-
       <Board grid={grid} />
+
+      <GameOverlay
+        status={status}
+        score={score}
+        highScore={highScore}
+        highestTile={highestTile}
+        moveCount={moveCount}
+        onRestart={restart}
+      />
     </div>
   );
 }

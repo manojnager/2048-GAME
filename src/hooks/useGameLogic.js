@@ -14,6 +14,16 @@ import {
 
 const HIGH_SCORE_KEY = '2048_high_score';
 
+function getHighestTile(grid) {
+  let max = 0;
+  grid.forEach((row) =>
+    row.forEach((cell) => {
+      if (cell && cell.value > max) max = cell.value;
+    })
+  );
+  return max;
+}
+
 export function useGameLogic() {
   const [grid, setGrid] = useState(() => initGame());
   const [score, setScore] = useState(0);
@@ -23,6 +33,8 @@ export function useGameLogic() {
   });
   const [status, setStatus] = useState('playing');
   const [history, setHistory] = useState([]);
+  const [moveCount, setMoveCount] = useState(0);
+  const [highestTile, setHighestTile] = useState(2);
 
   useEffect(() => {
     if (score > highScore) {
@@ -45,6 +57,8 @@ export function useGameLogic() {
         const { grid: newGrid } = spawnRandomTile(movedGrid);
 
         setScore((s) => s + scoreGained);
+        setMoveCount((m) => m + 1);
+        setHighestTile((prev) => Math.max(prev, getHighestTile(newGrid)));
 
         if (scoreGained > 0) {
           playMergeSound(scoreGained);
@@ -79,7 +93,9 @@ export function useGameLogic() {
     setScore(0);
     setStatus('playing');
     setHistory([]);
+    setMoveCount(0);
+    setHighestTile(2);
   }, []);
 
-  return { grid, score, highScore, status, moveGrid, restart };
+  return { grid, score, highScore, status, moveGrid, restart, moveCount, highestTile };
 }

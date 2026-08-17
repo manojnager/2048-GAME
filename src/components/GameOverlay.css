@@ -1,0 +1,111 @@
+/* src/components/GameOverlay.css */
+
+.overlay-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 10, 6, 0.75);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  animation: fadeIn 0.25s ease-out;
+}
+
+.overlay-card {
+  background: linear-gradient(180deg, #2e2119, #1e150f);
+  border: 2px solid #6b4a30;
+  border-radius: 20px;
+  padding: 36px 40px;
+  text-align: center;
+  min-width: 320px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  animation: cardPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.overlay-card.win {
+  border-color: #ffd98a;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), 0 0 40px rgba(240, 168, 75, 0.3);
+}
+
+.overlay-icon {
+  font-size: 48px;
+  margin-bottom: 8px;
+}
+
+.overlay-card h2 {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 36px;
+  font-weight: 800;
+  margin: 0 0 6px;
+  background: linear-gradient(180deg, #ffd98a, #d68a2c);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.overlay-subtitle {
+  color: #c2a98a;
+  font-size: 14px;
+  margin: 0 0 24px;
+}
+
+.overlay-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.stat {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid #4a3222;
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.stat-label {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #a68a6d;
+  margin-bottom: 4px;
+}
+
+.stat-value {
+  display: block;
+  font-size: 22px;
+  font-weight: 700;
+  color: #ffd98a;
+}
+
+.overlay-btn {
+  padding: 14px 36px;
+  background: linear-gradient(180deg, #f0a84b, #c9761f);
+  border: 1px solid #ffcb7a;
+  border-radius: 12px;
+  color: #2a1a0a;
+  font-weight: 700;
+  font-family: 'Fredoka', sans-serif;
+  cursor: pointer;
+  font-size: 16px;
+  letter-spacing: 0.5px;
+  box-shadow: 0 0 20px rgba(240, 168, 75, 0.4);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.overlay-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 28px rgba(240, 168, 75, 0.6);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes cardPop {
+  from { transform: scale(0.85); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
