@@ -4,14 +4,13 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   min-height: 100vh;
   width: 100%;
   padding: 40px 20px;
   text-align: center;
   color: #f5e6d3;
 
-  /* Wooden floor background — layered CSS gradients simulate wood planks + grain */
   background-color: #3b2418;
   background-image:
     repeating-linear-gradient(
@@ -36,7 +35,6 @@
     );
   background-size: 140px 100%, 100% 6px, 100% 100%;
 
-  /* subtle warm vignette glow behind the board */
   position: relative;
 }
 
@@ -141,4 +139,8 @@ h1 {
 .new-game-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 0 24px rgba(240, 168, 75, 0.6);
+}
+.new-game-btn:active,
+.overlay-btn:active {
+  transform: translateY(1px) scale(0.97);
 }

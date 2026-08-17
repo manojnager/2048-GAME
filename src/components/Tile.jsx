@@ -12,8 +12,8 @@ function getPosition(row, col) {
 }
 
 const TILE_COLORS = {
-  2:    { bg: '#4a3626', text: '#f5e6d3' },
-  4:    { bg: '#5a4230', text: '#f5e6d3' },
+  2:    { bg: '#5c4630', text: '#fff8ec' },  // brighter bg + brighter text for contrast
+  4:    { bg: '#6b4f34', text: '#fff8ec' },
   8:    { bg: '#8a5a2c', text: '#fff3e0' },
   16:   { bg: '#b8672a', text: '#fff3e0' },
   32:   { bg: '#c9481f', text: '#fff3e0' },

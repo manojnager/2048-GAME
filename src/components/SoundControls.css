@@ -30,3 +30,6 @@
 .sound-btn:hover {
   transform: translateY(-1px);
 }
+.sound-btn:active {
+  transform: translateY(1px) scale(0.95);
+}
