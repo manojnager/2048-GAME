@@ -3,7 +3,7 @@
 .board {
   position: relative;
   aspect-ratio: 1 / 1;
-  width: min(90vw, 420px); /* scales down on small screens, caps at 420px on desktop */
+  width: min(90vw, 420px);
   padding: clamp(8px, 2vw, 16px);
   background: #2a1c13;
   border-radius: 18px;
@@ -27,22 +27,26 @@
   border: 1px solid #4a3222;
 }
 
+/* The tile layer sits on top of the same grid, sharing identical
+   columns/rows/gap as the board — so tiles land EXACTLY on the
+   background cells with no manual math. */
 .tile-layer {
   position: absolute;
-  inset: clamp(8px, 2vw, 16px); /* matches board padding so tiles align with background cells */
+  inset: clamp(8px, 2vw, 16px);
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  gap: clamp(4px, 1.5vw, 10px);
 }
 
 .tile {
-  position: absolute;
-  width: calc(20% - clamp(4px, 1.5vw, 10px) * 4 / 5);
-  height: calc(20% - clamp(4px, 1.5vw, 10px) * 4 / 5);
   border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
   font-family: 'Fredoka', sans-serif;
-  transition: top 0.15s ease-in-out, left 0.15s ease-in-out;
+  transition: grid-row 0.15s ease-in-out, grid-column 0.15s ease-in-out;
   user-select: none;
   text-shadow: 0 2px 3px rgba(0, 0, 0, 0.35);
 }

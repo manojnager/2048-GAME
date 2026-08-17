@@ -1,17 +1,5 @@
 // src/components/Tile.jsx
 
-const GRID_SIZE = 5;
-
-// Position as percentages of the board — scales automatically with board size,
-// no JS resize listeners or fixed pixel math needed.
-function getPosition(row, col) {
-  const cellPercent = 100 / GRID_SIZE;
-  return {
-    top: `${row * cellPercent}%`,
-    left: `${col * cellPercent}%`,
-  };
-}
-
 const TILE_COLORS = {
   2:    { bg: '#5c4630', text: '#fff8ec' },
   4:    { bg: '#6b4f34', text: '#fff8ec' },
@@ -31,22 +19,21 @@ function getColors(value) {
 }
 
 export default function Tile({ tile, row, col }) {
-  const { top, left } = getPosition(row, col);
   const { bg, text } = getColors(tile.value);
 
   const classNames = ['tile'];
   if (tile.isNew) classNames.push('tile-new');
   if (tile.isMerged) classNames.push('tile-merged');
 
-  // Font size now scales via CSS clamp() based on tile value length, handled in CSS class instead
   const digitClass = tile.value >= 1000 ? 'digits-4' : tile.value >= 100 ? 'digits-3' : 'digits-1-2';
 
   return (
     <div
       className={classNames.join(' ')}
       style={{
-        top,
-        left,
+        // CSS Grid placement — row/col are 0-indexed, grid lines are 1-indexed
+        gridRow: row + 1,
+        gridColumn: col + 1,
         background: bg,
         color: text,
       }}
