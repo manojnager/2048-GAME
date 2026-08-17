@@ -6,6 +6,7 @@ import Board from './components/Board';
 import SoundControls from './components/SoundControls';
 import GameOverlay from './components/GameOverlay';
 import SetupScreen from './components/SetupScreen';
+import { formatTime } from './utils/formatTime';
 import './App.css';
 
 function App() {
@@ -21,6 +22,8 @@ function App() {
     highestTile,
     undo,
     canUndo,
+    timerEnabled,
+    elapsedSeconds,
   } = useGameLogic();
 
   useKeyboardControls(moveGrid);
@@ -39,6 +42,12 @@ function App() {
             <span className="label">Best</span>
             <span className="value">{highScore}</span>
           </div>
+          {timerEnabled && status !== 'setup' && (
+            <div>
+              <span className="label">Time</span>
+              <span className="value">{formatTime(elapsedSeconds)}</span>
+            </div>
+          )}
         </div>
         {status !== 'setup' && (
           <>
@@ -61,6 +70,7 @@ function App() {
         highScore={highScore}
         highestTile={highestTile}
         moveCount={moveCount}
+        elapsedSeconds={timerEnabled ? elapsedSeconds : null}
         onRestart={restart}
       />
     </div>

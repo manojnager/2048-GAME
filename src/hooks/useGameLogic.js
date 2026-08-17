@@ -1,5 +1,5 @@
 // src/hooks/useGameLogic.js
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { initGame, move, spawnRandomTile, hasWon, isGameOver } from '../utils/gameLogic';
 import {
   playMoveSound,
@@ -26,17 +26,21 @@ function getHighestTile(grid) {
 }
 
 export function useGameLogic() {
-  const [grid, setGrid] = useState(null); // null until the game actually starts
+  const [grid, setGrid] = useState(null);
   const [score, setScore] = useState(0);
   const [highScore, setHighScore] = useState(() => {
     const saved = localStorage.getItem(HIGH_SCORE_KEY);
     return saved ? parseInt(saved, 10) : 0;
   });
-  const [status, setStatus] = useState('setup'); // 'setup' | 'playing' | 'won' | 'lost'
+  const [status, setStatus] = useState('setup');
   const [history, setHistory] = useState([]);
   const [moveCount, setMoveCount] = useState(0);
   const [highestTile, setHighestTile] = useState(2);
   const [obstacleCount, setObstacleCount] = useState(0);
+
+  const [timerEnabled, setTimerEnabled] = useState(false);
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
+  const intervalRef = useRef(null);
 
   useEffect(() => {
     if (score > highScore) {
@@ -45,7 +49,19 @@ export function useGameLogic() {
     }
   }, [score, highScore]);
 
-  const startGame = useCallback((chosenObstacles) => {
+  // Stopwatch: tick every second while playing and timer is enabled
+  useEffect(() => {
+    if (status === 'playing' && timerEnabled) {
+      intervalRef.current = setInterval(() => {
+        setElapsedSeconds((s) => s + 1);
+      }, 1000);
+    }
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [status, timerEnabled]);
+
+  const startGame = useCallback((chosenObstacles, useTimer) => {
     playNewGameSound();
     setObstacleCount(chosenObstacles);
     setGrid(initGame(chosenObstacles));
@@ -54,6 +70,8 @@ export function useGameLogic() {
     setHistory([]);
     setMoveCount(0);
     setHighestTile(2);
+    setTimerEnabled(useTimer);
+    setElapsedSeconds(0);
   }, []);
 
   const moveGrid = useCallback(
@@ -125,11 +143,11 @@ export function useGameLogic() {
 
   const canUndo = history.length > 0;
 
-  // "Restart" goes back to the setup screen so obstacle count can be re-chosen
   const restart = useCallback(() => {
     setStatus('setup');
     setGrid(null);
     setHistory([]);
+    setElapsedSeconds(0);
   }, []);
 
   return {
@@ -145,5 +163,7 @@ export function useGameLogic() {
     undo,
     canUndo,
     obstacleCount,
+    timerEnabled,
+    elapsedSeconds,
   };
 }

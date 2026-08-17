@@ -1,9 +1,10 @@
 // src/components/GameOverlay.jsx
 import { useEffect, useRef } from 'react';
 import confetti from 'canvas-confetti';
+import { formatTime } from '../utils/formatTime';
 import './GameOverlay.css';
 
-export default function GameOverlay({ status, score, highScore, highestTile, moveCount, onRestart }) {
+export default function GameOverlay({ status, score, highScore, highestTile, moveCount, elapsedSeconds, onRestart }) {
   const firedRef = useRef(false);
 
   useEffect(() => {
@@ -80,6 +81,12 @@ export default function GameOverlay({ status, score, highScore, highestTile, mov
             <span className="stat-label">Moves</span>
             <span className="stat-value">{moveCount}</span>
           </div>
+          {elapsedSeconds !== null && (
+            <div className="stat">
+              <span className="stat-label">Time</span>
+              <span className="stat-value">{formatTime(elapsedSeconds)}</span>
+            </div>
+          )}
         </div>
 
         <button className="overlay-btn" onClick={onRestart}>

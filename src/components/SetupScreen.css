@@ -99,3 +99,21 @@
 .start-btn:active {
   transform: translateY(1px) scale(0.97);
 }
+.timer-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #d9c3a9;
+  font-size: 13px;
+  margin-bottom: 20px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.timer-toggle input {
+  width: 16px;
+  height: 16px;
+  accent-color: #c9761f;
+  cursor: pointer;
+}

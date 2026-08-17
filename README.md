@@ -72,14 +72,6 @@ src/
 ├── App.jsx # Main app layout
 └── App.css # Global theme styles
 
-## 🗺️ Roadmap / Possible Future Additions
-
-- Mobile touch/swipe controls
-- Responsive layout for small screens
-- Undo move
-- Obstacle/blocked tiles for extra difficulty
-- Timer or challenge mode
-
 ## 📄 License
 
 This project is for learning purposes. Feel free to fork and modify.

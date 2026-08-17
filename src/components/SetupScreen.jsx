@@ -5,6 +5,7 @@ import './SetupScreen.css';
 
 export default function SetupScreen({ onStart }) {
   const [obstacles, setObstacles] = useState(0);
+  const [timerOn, setTimerOn] = useState(false);
 
   const options = Array.from({ length: MAX_OBSTACLES + 1 }, (_, i) => i); // 0,1,2,3,4,5
 
@@ -32,7 +33,16 @@ export default function SetupScreen({ onStart }) {
             : `${obstacles} obstacle${obstacles > 1 ? 's' : ''} will block tiles on the board`}
         </p>
 
-        <button className="start-btn" onClick={() => onStart(obstacles)}>
+        <label className="timer-toggle">
+          <input
+            type="checkbox"
+            checked={timerOn}
+            onChange={(e) => setTimerOn(e.target.checked)}
+          />
+          Enable stopwatch (track your solve time)
+        </label>
+
+        <button className="start-btn" onClick={() => onStart(obstacles, timerOn)}>
           Start Game
         </button>
       </div>
