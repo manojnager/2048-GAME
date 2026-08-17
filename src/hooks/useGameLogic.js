@@ -48,7 +48,7 @@ export function useGameLogic() {
       if (status !== 'playing') return;
 
       setGrid((currentGrid) => {
-        const { grid: movedGrid, scoreGained, moved } = move(currentGrid, direction);
+        const { grid: movedGrid, scoreGained, moved, mergedValues } = move(currentGrid, direction);
 
         if (!moved) return currentGrid;
 
@@ -60,9 +60,10 @@ export function useGameLogic() {
         setMoveCount((m) => m + 1);
         setHighestTile((prev) => Math.max(prev, getHighestTile(newGrid)));
 
-        if (scoreGained > 0) {
-          playMergeSound(scoreGained);
-          maybePlayPraise(scoreGained);
+        if (mergedValues.length > 0) {
+          playMergeSound(mergedValues); // plays a chime per merge, cascading for multi-merges
+          const biggestMerge = Math.max(...mergedValues);
+          maybePlayPraise(biggestMerge); // praise based on the biggest merge this move
         } else {
           playMoveSound();
         }

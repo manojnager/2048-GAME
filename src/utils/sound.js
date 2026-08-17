@@ -59,11 +59,27 @@ export function playMoveSound() {
   playNote({ frequency: 300, duration: 0.05, type: 'sine', volume: 0.06, filterFreq: 1500 });
 }
 
-export function playMergeSound(value) {
+/**
+ * Plays a chime for a single merge (used internally).
+ */
+function playSingleMergeChime(value, delay = 0) {
   const tier = Math.log2(value);
   const baseFreq = 260 + tier * 40;
-  playNote({ frequency: baseFreq, duration: 0.2, type: 'triangle', volume: 0.18, filterFreq: 4000 });
-  playNote({ frequency: baseFreq * 1.5, duration: 0.15, type: 'sine', volume: 0.08, filterFreq: 4000, delay: 0.02 });
+  playNote({ frequency: baseFreq, duration: 0.2, type: 'triangle', volume: 0.18, filterFreq: 4000, delay });
+  playNote({ frequency: baseFreq * 1.5, duration: 0.15, type: 'sine', volume: 0.08, filterFreq: 4000, delay: delay + 0.02 });
+}
+
+/**
+ * Plays merge sound(s) for a move. Accepts an array of merged tile values
+ * (one move can trigger multiple merges on a 5x5 board). Each merge gets
+ * its own chime, staggered slightly so multi-merges sound like a satisfying
+ * cascade instead of one single flat tone.
+ */
+export function playMergeSound(mergedValues) {
+  const values = Array.isArray(mergedValues) ? mergedValues : [mergedValues];
+  values.forEach((value, i) => {
+    playSingleMergeChime(value, i * 0.08); // slight stagger between each merge
+  });
 }
 
 export function playNewGameSound() {
@@ -121,9 +137,10 @@ function speak(text) {
   window.speechSynthesis.cancel();
   const utterance = new SpeechSynthesisUtterance(text);
   if (cachedVoice) utterance.voice = cachedVoice;
-  // Natural, slow, calm delivery — normal pitch, slower-than-default rate
-  utterance.pitch = 1.0;
-  utterance.rate = 0.85;
+  // Slight randomization in pitch/rate per call so repeated words don't sound
+  // identically robotic every time — mimics natural human variation
+  utterance.pitch = 0.95 + Math.random() * 0.15;
+  utterance.rate = 0.82 + Math.random() * 0.08;
   utterance.volume = 0.9;
   window.speechSynthesis.speak(utterance);
 }
