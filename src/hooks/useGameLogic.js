@@ -1,6 +1,16 @@
 // src/hooks/useGameLogic.js
 import { useState, useCallback, useEffect } from 'react';
 import { initGame, move, spawnRandomTile, hasWon, isGameOver } from '../utils/gameLogic';
+import {
+  playMoveSound,
+  playMergeSound,
+  playNewGameSound,
+  playWinSound,
+  playGameOverSound,
+  maybePlayPraise,
+  playWinVoice,
+  playGameOverVoice,
+} from '../utils/sound';
 
 const HIGH_SCORE_KEY = '2048_high_score';
 
@@ -11,10 +21,9 @@ export function useGameLogic() {
     const saved = localStorage.getItem(HIGH_SCORE_KEY);
     return saved ? parseInt(saved, 10) : 0;
   });
-  const [status, setStatus] = useState('playing'); // 'playing' | 'won' | 'lost'
-  const [history, setHistory] = useState([]); // for future undo feature
+  const [status, setStatus] = useState('playing');
+  const [history, setHistory] = useState([]);
 
-  // Persist high score whenever score changes
   useEffect(() => {
     if (score > highScore) {
       setHighScore(score);
@@ -24,27 +33,38 @@ export function useGameLogic() {
 
   const moveGrid = useCallback(
     (direction) => {
-      if (status !== 'playing') return; // no moves after game ends
+      if (status !== 'playing') return;
 
       setGrid((currentGrid) => {
         const { grid: movedGrid, scoreGained, moved } = move(currentGrid, direction);
 
-        if (!moved) return currentGrid; // invalid move, nothing changes
+        if (!moved) return currentGrid;
 
-        // Save previous state to history (for future undo)
         setHistory((h) => [...h, { grid: currentGrid, score }]);
 
-        // Spawn a new tile after a successful move
         const { grid: newGrid } = spawnRandomTile(movedGrid);
 
-        // Update score
         setScore((s) => s + scoreGained);
 
-        // Check win/loss conditions
+        if (scoreGained > 0) {
+          playMergeSound(scoreGained);
+          maybePlayPraise(scoreGained);
+        } else {
+          playMoveSound();
+        }
+
         if (hasWon(newGrid)) {
           setStatus('won');
+          setTimeout(() => {
+            playWinSound();
+            playWinVoice();
+          }, 200);
         } else if (isGameOver(newGrid)) {
           setStatus('lost');
+          setTimeout(() => {
+            playGameOverSound();
+            playGameOverVoice();
+          }, 200);
         }
 
         return newGrid;
@@ -54,6 +74,7 @@ export function useGameLogic() {
   );
 
   const restart = useCallback(() => {
+    playNewGameSound();
     setGrid(initGame());
     setScore(0);
     setStatus('playing');

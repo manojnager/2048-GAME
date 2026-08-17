@@ -1,0 +1,32 @@
+/* src/components/SoundControls.css */
+
+.sound-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.sound-btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid #5a4231;
+  background: rgba(36, 26, 20, 0.85);
+  color: #f5e6d3;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.sound-btn.on {
+  color: #ffd98a;
+  border-color: #c9761f;
+}
+
+.sound-btn.off {
+  opacity: 0.5;
+}
+
+.sound-btn:hover {
+  transform: translateY(-1px);
+}

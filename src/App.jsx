@@ -2,6 +2,7 @@
 import { useGameLogic } from './hooks/useGameLogic';
 import { useKeyboardControls } from './hooks/useKeyboardControls';
 import Board from './components/Board';
+import SoundControls from './components/SoundControls';
 import './App.css';
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
           </div>
         </div>
         <button className="new-game-btn" onClick={restart}>New Game</button>
+        <SoundControls />
       </div>
 
       <p className="tagline">Join the numbers and get to the 2048 tile!</p>
