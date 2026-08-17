@@ -8,7 +8,7 @@ import GameOverlay from './components/GameOverlay';
 import './App.css';
 
 function App() {
-  const { grid, score, highScore, status, moveGrid, restart, moveCount, highestTile } = useGameLogic();
+  const { grid, score, highScore, status, moveGrid, restart, moveCount, highestTile, undo, canUndo } = useGameLogic();
 
   useKeyboardControls(moveGrid);
   useSwipeControls(moveGrid);
@@ -28,6 +28,7 @@ function App() {
           </div>
         </div>
         <button className="new-game-btn" onClick={restart}>New Game</button>
+        <button className="undo-btn" onClick={undo} disabled={!canUndo}>↩ Undo</button>
         <SoundControls />
       </div>
 

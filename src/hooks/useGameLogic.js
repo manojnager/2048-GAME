@@ -13,6 +13,7 @@ import {
 } from '../utils/sound';
 
 const HIGH_SCORE_KEY = '2048_high_score';
+const MAX_UNDO_STEPS = 10; // cap history size to avoid unbounded memory growth
 
 function getHighestTile(grid) {
   let max = 0;
@@ -52,7 +53,16 @@ export function useGameLogic() {
 
         if (!moved) return currentGrid;
 
-        setHistory((h) => [...h, { grid: currentGrid, score }]);
+        // Save a snapshot BEFORE this move, for undo. Cap history length.
+        setHistory((h) => {
+          const newHistory = [
+            ...h,
+            { grid: currentGrid, score, moveCount, highestTile },
+          ];
+          return newHistory.length > MAX_UNDO_STEPS
+            ? newHistory.slice(newHistory.length - MAX_UNDO_STEPS)
+            : newHistory;
+        });
 
         const { grid: newGrid } = spawnRandomTile(movedGrid);
 
@@ -61,9 +71,9 @@ export function useGameLogic() {
         setHighestTile((prev) => Math.max(prev, getHighestTile(newGrid)));
 
         if (mergedValues.length > 0) {
-          playMergeSound(mergedValues); // plays a chime per merge, cascading for multi-merges
+          playMergeSound(mergedValues);
           const biggestMerge = Math.max(...mergedValues);
-          maybePlayPraise(biggestMerge); // praise based on the biggest merge this move
+          maybePlayPraise(biggestMerge);
         } else {
           playMoveSound();
         }
@@ -85,8 +95,27 @@ export function useGameLogic() {
         return newGrid;
       });
     },
-    [status, score]
+    [status, score, moveCount, highestTile]
   );
+
+  const undo = useCallback(() => {
+    setHistory((h) => {
+      if (h.length === 0) return h; // nothing to undo
+
+      const lastState = h[h.length - 1];
+      setGrid(lastState.grid);
+      setScore(lastState.score);
+      setMoveCount(lastState.moveCount);
+      setHighestTile(lastState.highestTile);
+      setStatus('playing'); // undo can revive from a loss state
+
+      playMoveSound(); // subtle feedback that undo happened
+
+      return h.slice(0, -1); // remove the used snapshot
+    });
+  }, []);
+
+  const canUndo = history.length > 0;
 
   const restart = useCallback(() => {
     playNewGameSound();
@@ -98,5 +127,5 @@ export function useGameLogic() {
     setHighestTile(2);
   }, []);
 
-  return { grid, score, highScore, status, moveGrid, restart, moveCount, highestTile };
+  return { grid, score, highScore, status, moveGrid, restart, moveCount, highestTile, undo, canUndo };
 }
