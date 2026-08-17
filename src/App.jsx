@@ -1,6 +1,7 @@
 // src/App.jsx
 import { useGameLogic } from './hooks/useGameLogic';
 import { useKeyboardControls } from './hooks/useKeyboardControls';
+import { useSwipeControls } from './hooks/useSwipeControls';
 import Board from './components/Board';
 import SoundControls from './components/SoundControls';
 import GameOverlay from './components/GameOverlay';
@@ -10,6 +11,7 @@ function App() {
   const { grid, score, highScore, status, moveGrid, restart, moveCount, highestTile } = useGameLogic();
 
   useKeyboardControls(moveGrid);
+  useSwipeControls(moveGrid);
 
   return (
     <div className="app">
