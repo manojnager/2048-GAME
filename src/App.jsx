@@ -5,10 +5,23 @@ import { useSwipeControls } from './hooks/useSwipeControls';
 import Board from './components/Board';
 import SoundControls from './components/SoundControls';
 import GameOverlay from './components/GameOverlay';
+import SetupScreen from './components/SetupScreen';
 import './App.css';
 
 function App() {
-  const { grid, score, highScore, status, moveGrid, restart, moveCount, highestTile, undo, canUndo } = useGameLogic();
+  const {
+    grid,
+    score,
+    highScore,
+    status,
+    moveGrid,
+    restart,
+    startGame,
+    moveCount,
+    highestTile,
+    undo,
+    canUndo,
+  } = useGameLogic();
 
   useKeyboardControls(moveGrid);
   useSwipeControls(moveGrid);
@@ -27,14 +40,20 @@ function App() {
             <span className="value">{highScore}</span>
           </div>
         </div>
-        <button className="new-game-btn" onClick={restart}>New Game</button>
-        <button className="undo-btn" onClick={undo} disabled={!canUndo}>↩ Undo</button>
+        {status !== 'setup' && (
+          <>
+            <button className="new-game-btn" onClick={restart}>New Game</button>
+            <button className="undo-btn" onClick={undo} disabled={!canUndo}>↩ Undo</button>
+          </>
+        )}
         <SoundControls />
       </div>
 
       <p className="tagline">Join the numbers and get to the 2048 tile!</p>
 
-      <Board grid={grid} />
+      {status === 'setup' && <SetupScreen onStart={startGame} />}
+
+      {status !== 'setup' && <Board grid={grid} />}
 
       <GameOverlay
         status={status}

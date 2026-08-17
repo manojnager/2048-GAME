@@ -13,29 +13,30 @@ import {
 } from '../utils/sound';
 
 const HIGH_SCORE_KEY = '2048_high_score';
-const MAX_UNDO_STEPS = 10; // cap history size to avoid unbounded memory growth
+const MAX_UNDO_STEPS = 10;
 
 function getHighestTile(grid) {
   let max = 0;
   grid.forEach((row) =>
     row.forEach((cell) => {
-      if (cell && cell.value > max) max = cell.value;
+      if (cell && !cell.blocked && cell.value > max) max = cell.value;
     })
   );
   return max;
 }
 
 export function useGameLogic() {
-  const [grid, setGrid] = useState(() => initGame());
+  const [grid, setGrid] = useState(null); // null until the game actually starts
   const [score, setScore] = useState(0);
   const [highScore, setHighScore] = useState(() => {
     const saved = localStorage.getItem(HIGH_SCORE_KEY);
     return saved ? parseInt(saved, 10) : 0;
   });
-  const [status, setStatus] = useState('playing');
+  const [status, setStatus] = useState('setup'); // 'setup' | 'playing' | 'won' | 'lost'
   const [history, setHistory] = useState([]);
   const [moveCount, setMoveCount] = useState(0);
   const [highestTile, setHighestTile] = useState(2);
+  const [obstacleCount, setObstacleCount] = useState(0);
 
   useEffect(() => {
     if (score > highScore) {
@@ -43,6 +44,17 @@ export function useGameLogic() {
       localStorage.setItem(HIGH_SCORE_KEY, String(score));
     }
   }, [score, highScore]);
+
+  const startGame = useCallback((chosenObstacles) => {
+    playNewGameSound();
+    setObstacleCount(chosenObstacles);
+    setGrid(initGame(chosenObstacles));
+    setScore(0);
+    setStatus('playing');
+    setHistory([]);
+    setMoveCount(0);
+    setHighestTile(2);
+  }, []);
 
   const moveGrid = useCallback(
     (direction) => {
@@ -53,12 +65,8 @@ export function useGameLogic() {
 
         if (!moved) return currentGrid;
 
-        // Save a snapshot BEFORE this move, for undo. Cap history length.
         setHistory((h) => {
-          const newHistory = [
-            ...h,
-            { grid: currentGrid, score, moveCount, highestTile },
-          ];
+          const newHistory = [...h, { grid: currentGrid, score, moveCount, highestTile }];
           return newHistory.length > MAX_UNDO_STEPS
             ? newHistory.slice(newHistory.length - MAX_UNDO_STEPS)
             : newHistory;
@@ -100,32 +108,42 @@ export function useGameLogic() {
 
   const undo = useCallback(() => {
     setHistory((h) => {
-      if (h.length === 0) return h; // nothing to undo
+      if (h.length === 0) return h;
 
       const lastState = h[h.length - 1];
       setGrid(lastState.grid);
       setScore(lastState.score);
       setMoveCount(lastState.moveCount);
       setHighestTile(lastState.highestTile);
-      setStatus('playing'); // undo can revive from a loss state
+      setStatus('playing');
 
-      playMoveSound(); // subtle feedback that undo happened
+      playMoveSound();
 
-      return h.slice(0, -1); // remove the used snapshot
+      return h.slice(0, -1);
     });
   }, []);
 
   const canUndo = history.length > 0;
 
+  // "Restart" goes back to the setup screen so obstacle count can be re-chosen
   const restart = useCallback(() => {
-    playNewGameSound();
-    setGrid(initGame());
-    setScore(0);
-    setStatus('playing');
+    setStatus('setup');
+    setGrid(null);
     setHistory([]);
-    setMoveCount(0);
-    setHighestTile(2);
   }, []);
 
-  return { grid, score, highScore, status, moveGrid, restart, moveCount, highestTile, undo, canUndo };
+  return {
+    grid,
+    score,
+    highScore,
+    status,
+    moveGrid,
+    restart,
+    startGame,
+    moveCount,
+    highestTile,
+    undo,
+    canUndo,
+    obstacleCount,
+  };
 }

@@ -2,9 +2,9 @@
 
 export const GRID_SIZE = 5;
 export const WIN_VALUE = 2048;
-export const OBSTACLE_COUNT = 3; // number of blocked cells per game
+export const MAX_OBSTACLES = 5;
 
-export const BLOCKED = { blocked: true }; // sentinel value for obstacle cells
+export const BLOCKED = { blocked: true };
 
 export function createEmptyGrid() {
   return Array.from({ length: GRID_SIZE }, () =>
@@ -22,17 +22,13 @@ function getEmptyCells(grid) {
   return empty;
 }
 
-/**
- * Places OBSTACLE_COUNT blocked cells at random empty positions.
- * Call this once at game init, before spawning the starting number tiles.
- */
-export function placeObstacles(grid, count = OBSTACLE_COUNT) {
+export function placeObstacles(grid, count) {
   let newGrid = grid.map((row) => [...row]);
   const empty = getEmptyCells(newGrid);
 
-  // Shuffle and take the first `count` positions
+  const clampedCount = Math.max(0, Math.min(count, MAX_OBSTACLES, empty.length));
   const shuffled = [...empty].sort(() => Math.random() - 0.5);
-  const chosen = shuffled.slice(0, Math.min(count, empty.length));
+  const chosen = shuffled.slice(0, clampedCount);
 
   chosen.forEach(([r, c]) => {
     newGrid[r][c] = { ...BLOCKED };
@@ -55,21 +51,16 @@ export function spawnRandomTile(grid) {
 }
 
 /**
- * Initializes a fresh game: empty grid + obstacles + 2 starting tiles.
+ * Initializes a fresh game with a chosen number of obstacles (0 to MAX_OBSTACLES).
  */
-export function initGame() {
+export function initGame(obstacleCount = 0) {
   let grid = createEmptyGrid();
-  grid = placeObstacles(grid);
+  grid = placeObstacles(grid, obstacleCount);
   ({ grid } = spawnRandomTile(grid));
   ({ grid } = spawnRandomTile(grid));
   return grid;
 }
 
-/**
- * Slides and merges a single row/segment to the LEFT, treating obstacles
- * as immovable walls. A row may contain multiple "segments" split by
- * obstacles — each segment slides independently within its bounds.
- */
 function slideAndMergeRow(row) {
   const original = row.map((cell) => (cell?.blocked ? 'BLOCKED' : cell ? cell.value : null));
 
@@ -77,11 +68,9 @@ function slideAndMergeRow(row) {
   let gained = 0;
   const mergedValues = [];
 
-  // Split the row into segments separated by obstacles
   let segmentStart = 0;
 
   const processSegment = (start, end) => {
-    // Collect non-null tiles in this segment [start, end)
     const tiles = [];
     for (let i = start; i < end; i++) {
       if (row[i] !== null) tiles.push(row[i]);
@@ -108,7 +97,6 @@ function slideAndMergeRow(row) {
       }
     }
 
-    // Place the merged tiles at the start of the segment, rest stays empty
     for (let i = 0; i < merged.length; i++) {
       result[start + i] = merged[i];
     }
@@ -117,11 +105,11 @@ function slideAndMergeRow(row) {
   for (let i = 0; i < row.length; i++) {
     if (row[i]?.blocked) {
       processSegment(segmentStart, i);
-      result[i] = row[i]; // obstacle stays in place, untouched
+      result[i] = row[i];
       segmentStart = i + 1;
     }
   }
-  processSegment(segmentStart, row.length); // process final segment after last obstacle
+  processSegment(segmentStart, row.length);
 
   const newValues = result.map((cell) => (cell?.blocked ? 'BLOCKED' : cell ? cell.value : null));
   const moved = JSON.stringify(original) !== JSON.stringify(newValues);
