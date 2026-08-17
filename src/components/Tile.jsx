@@ -1,18 +1,19 @@
 // src/components/Tile.jsx
 
-const CELL_SIZE = 70;
-const GAP = 10;
+const GRID_SIZE = 5;
 
+// Position as percentages of the board — scales automatically with board size,
+// no JS resize listeners or fixed pixel math needed.
 function getPosition(row, col) {
-  const offset = CELL_SIZE + GAP;
+  const cellPercent = 100 / GRID_SIZE;
   return {
-    top: row * offset,
-    left: col * offset,
+    top: `${row * cellPercent}%`,
+    left: `${col * cellPercent}%`,
   };
 }
 
 const TILE_COLORS = {
-  2:    { bg: '#5c4630', text: '#fff8ec' },  // brighter bg + brighter text for contrast
+  2:    { bg: '#5c4630', text: '#fff8ec' },
   4:    { bg: '#6b4f34', text: '#fff8ec' },
   8:    { bg: '#8a5a2c', text: '#fff3e0' },
   16:   { bg: '#b8672a', text: '#fff3e0' },
@@ -37,23 +38,20 @@ export default function Tile({ tile, row, col }) {
   if (tile.isNew) classNames.push('tile-new');
   if (tile.isMerged) classNames.push('tile-merged');
 
-  const fontSize = tile.value >= 1000 ? '20px' : tile.value >= 100 ? '22px' : '26px';
+  // Font size now scales via CSS clamp() based on tile value length, handled in CSS class instead
+  const digitClass = tile.value >= 1000 ? 'digits-4' : tile.value >= 100 ? 'digits-3' : 'digits-1-2';
 
   return (
     <div
       className={classNames.join(' ')}
       style={{
-        top: `${top}px`,
-        left: `${left}px`,
+        top,
+        left,
         background: bg,
         color: text,
-        fontSize,
-        boxShadow: tile.value >= 128
-          ? `0 0 14px ${bg}aa, inset 0 1px 2px rgba(255,255,255,0.2)`
-          : `inset 0 1px 2px rgba(255,255,255,0.08)`,
       }}
     >
-      {tile.value}
+      <span className={digitClass}>{tile.value}</span>
     </div>
   );
 }
