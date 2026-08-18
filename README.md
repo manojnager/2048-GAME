@@ -66,10 +66,10 @@ Output goes to the `dist/` folder — deployable to any static host (Vercel, Net
 ## 📁 Project Structure
 
 src/
-├── components/ # UI components (Board, Tile, GameOverlay, SoundControls) 
-├── hooks/ # useGameLogic, useKeyboardControls 
-├── utils/ # gameLogic.js (pure game engine), sound.js (audio) 
-├── App.jsx # Main app layout 
+├── components/ # UI components (Board, Tile, GameOverlay, SoundControls) <br> 
+├── hooks/ # useGameLogic, useKeyboardControls <br>
+├── utils/ # gameLogic.js (pure game engine), sound.js (audio)<br> 
+├── App.jsx # Main app layout <br>
 └── App.css # Global theme styles
 
 ## 📄 License
