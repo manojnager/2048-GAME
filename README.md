@@ -65,7 +65,7 @@ Output goes to the `dist/` folder — deployable to any static host (Vercel, Net
 
 ## 📁 Project Structure
 
-src/
+src/ <br> 
 ├── components/ # UI components (Board, Tile, GameOverlay, SoundControls) <br> 
 ├── hooks/ # useGameLogic, useKeyboardControls <br>
 ├── utils/ # gameLogic.js (pure game engine), sound.js (audio)<br> 
